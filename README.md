@@ -1,0 +1,4 @@
+NihongoTrainer
+==============
+
+Japanese vocabulary trainer
