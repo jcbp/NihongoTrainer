@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	
+		<title>Japanese test</title>
+		<script src="lib/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/wanakana.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/knockout-3.0.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="units.js" type="text/javascript" charset="utf-8"></script>
+		<script src="app.js" type="text/javascript" charset="utf-8"></script>
+
+		<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css" type="text/css">
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+
+	</head>
+	<body>
+		<div class="navbar navbar-default navbar-static-top" role="navigation">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">
+					Nihon-go
+				</a>
+			</div>
+		</div>
+
+		<div id="main-container" data-bind="foreach: units">
+			<div class="jumbotron">
+				<h3 data-bind="text: $root.replaceHiragana(title)"></h3>
+				<p data-bind="text: $root.replaceHiragana(text)"></p>
+				<p><button class="btn btn-primary" data-bind="click: function() { $root.startUnit($data); }">Realizar lección</button></p>
+			</div>
+		</div>
+
+		<div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="width: 80%; padding-top: 80px">
+				<div class="modal-content" style="min-height: 300px">
+
+					<button type="button" class="close" data-bind="click: closeLesson">&times;</button>
+
+					<div style="padding: 20px" data-bind="if: lesson() && attempts()!=0">
+						<div class="form-inline">
+							<div class="progress form-group" style="width: 60%; margin-right: 12px">
+								<div class="progress-bar progress-bar-info" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="style: { width: progress }"></div>
+							</div>
+							<div class="badge" data-bind="text: remaining"></div>
+						</div>
+						<h3 data-bind="text: lesson().title"></h3>
+						<h3><b data-bind="text: lesson().titleArg" style="padding-left: 20px"></b></h3><br />
+						<div data-bind="visible: lesson().type=='card'">
+							<div class="row" data-bind="foreach: lesson().cards">
+								<div class="col-xs-6 col-md-3" style="width: 220px; height: 260px">
+									<a href="#" class="thumbnail" data-bind="popover: { content: $root.getCardPopoverContent($data) }, click: function() { $root.selectCard($element, $data); }">
+										<img src="#" data-bind="attr: { 'src': src, alt: text }" style="width: 170px; height: 160px">
+										<h3 data-bind="text: $root.getHiragana(text)" style="text-align: center; text-decoration: none"></h3>
+										<h5 style="text-align: center; text-decoration: none">(<span data-bind="text: $root.getHiragana(reading)"></span>)</h5>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div data-bind="visible: lesson().type=='esp-jp'" class="form-inline">
+							<div data-bind="foreach: lesson().text" class="form-group">
+								<span class="lead text-primary" style="font-weight: bold" data-bind="text: word, popover: { content: $root.getWordPopoverContent($data), highlightWord: true }, event: { mouseover: function() { $root.selectWord($element); } }"></span>&nbsp;
+							</div>
+							<div class="form-group">
+								<input class="form-control" type="text" style="width: 700px" data-bind="wanakanaValue: $root.answer, wanakana: true">
+							</div>
+						</div>
+						<div data-bind="visible: lesson().type=='jp-esp'" class="form-inline">
+							<div data-bind="foreach: lesson().text" class="form-group">
+								<span data-bind="if: typeof(reading)!='undefined'">
+									<div data-bind="text: $root.getHiragana(reading)" style="font-size: 10px"></div>
+								</span>
+								<span class="lead text-primary" style="font-weight: bold" data-bind="text: $root.getHiragana(word), popover: { content: $root.getWordPopoverContent($data), highlightWord: true }, event: { mouseover: function() { $root.selectWord($element); } }"></span>&nbsp;
+							</div>
+							<div class="form-group">
+								<input class="form-control" type="text" style="width: 700px" data-bind="value: $root.answer">
+							</div>
+						</div>
+						<br />
+						<div class="form-inline">
+							<ul class="pager" id="lesson-buttons">
+								<li data-bind="css: { disabled: !validationEnabled() }">
+									<a href="#" data-bind="clickIfEnable: validate">Comprobar</a>
+								</li>
+								<li data-bind="css: { disabled: !continueEnabled() }">
+									<a href="#" data-bind="clickIfEnable: next">Continuar</a>
+								</li>
+							</ul>
+						</div>
+						<div id="result">
+							<div data-bind="visible: showResult">
+								<div class="alert alert-success" data-bind="visible: valid">
+									Respuesta correcta
+								</div>
+								<div class="alert alert-danger" data-bind="visible: !valid()">
+									Respuesta incorrecta
+								</div>
+							</div>
+						</div>
+						<div>
+							<span class="label label-danger" id="attempts">Intentos restantes: <span data-bind="text: attempts"></span></span>
+						</div>
+					</div>
+					<div data-bind="if: attempts()==0" style="padding: 20px">
+						Te quedaste sin intentos
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>

@@ -1,0 +1,28 @@
+body {
+	padding: 0px;
+}
+.card-selected {
+	border: 5px solid #b0d0ff;
+}
+.word-selected {
+	background-color: #e0e0e0;
+}
+.jumbotron {
+	padding: 20px;
+	border-radius: 6px;
+}
+#main-container {
+	padding: 40px;
+}
+#lesson-buttons {
+	text-align: left;
+}
+#result {
+	height: 75px;
+}
+#attempts {
+	font-size: 10pt;
+}
+.modal-content > .close {
+	margin: 10px;
+}
